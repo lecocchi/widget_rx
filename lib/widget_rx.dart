@@ -9,6 +9,7 @@ class Wrx<T, E> extends StatelessWidget {
     this.onSuccess,
     this.onError,
     this.onWaiting,
+    this.initialData,
   })  : assert(stream != null, "stream shouldn't be null"),
         super(key: key);
 
@@ -16,10 +17,12 @@ class Wrx<T, E> extends StatelessWidget {
   final Widget Function(T value)? onSuccess;
   final Widget Function(E value)? onError;
   final Widget Function()? onWaiting;
+  final T? initialData;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
+      initialData: initialData,
       stream: stream,
       builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
         if (onSuccess != null && snapshot.hasData) {
