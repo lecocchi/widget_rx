@@ -1,39 +1,84 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+## Wrx
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+The Flutter Widget that wraps the stream builder and makes it easy to use.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+### Getting started
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
+1. Add dependency to your pubspec.yaml
+```
+dependencies:
+   widget_rx: ^1.0.0
+   ```
+2. Import it
+```
+import 'package:widget_rx/widget_rx.dart';
 ```
 
-## Additional information
+### Conditions
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+- **onSuccess** = if snapshot.hasData is true
+- **onError** = if snapshot.hasError is true
+- **onWaiting** = if snapshot.hasData is false
+
+
+If you want to indicate the data type when it is a success or an error, you need to add the data types as generics Wrx<S, E>
+- S (Data type when success)
+- E (Data type when is error)
+
+The package has a class for the error type (StreamException), which receives a generic to indicate the type of error data that you want to use (See example)
+
+### Example
+
+```
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:widget_rx/widget_rx.dart';
+import 'package:widget_rx/exception/stream_exception.dart';
+
+void main() => runApp(
+    const Init(),
+);
+
+class Init extends StatelessWidget {
+    const Init({Key? key}) : super(key: key);
+    
+    @override
+    Widget build(BuildContext context) {
+        return const MaterialApp(
+        title: 'Widget Reactive',
+        home: Home(),
+        );
+    }
+}
+
+class Home extends StatelessWidget {
+    const Home({super.key});
+    
+    @override
+    Widget build(BuildContext context) {
+    final StreamController<String> streamController =
+    StreamController<String>();
+    
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Example Wrx'),
+          ),
+          body: Center(
+            child: Wrx<String, StreamException<String>>(
+              stream: streamController.stream,
+              onSuccess: (value) {
+                return Text(value);
+              },
+              onError: (error) {
+                return Text(error.data);
+              },
+              onWaiting: () {
+                return const CircularProgressIndicator();
+              },
+            ),
+          ),
+        );
+    }
+}
+```

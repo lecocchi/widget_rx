@@ -1,6 +1,6 @@
 name: widget_rx
-description: A new Flutter package project.
-version: 0.0.2
+description: Widget reactive.
+version: 1.0.0
 homepage:
 
 environment:
